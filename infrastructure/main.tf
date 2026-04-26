@@ -20,3 +20,11 @@ terraform {
 provider "oci" {
   config_file_profile = "clonecademy"
 }
+
+# --- Hello World ---
+
+data "oci_identity_regions" "all_regions" {}
+
+output "all_regions" {
+  value = data.oci_identity_regions.all_regions.regions
+}
