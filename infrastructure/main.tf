@@ -21,6 +21,17 @@ terraform {
 
 # --- Providers ---
 
+variable "region" { type = string }
+variable "tenancy_ocid" { type = string }
+variable "user_ocid" { type = string }
+variable "private_key_path" { type = string }
+variable "fingerprint" { type = string }
+
 provider "oci" {
-  config_file_profile = "clonecademy"
+  auth             = "APIKey"
+  region           = var.region
+  tenancy_ocid     = var.tenancy_ocid
+  user_ocid        = var.user_ocid
+  private_key_path = var.private_key_path
+  fingerprint      = var.fingerprint
 }
