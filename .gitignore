@@ -2,6 +2,15 @@
 # PATH: ~/.gitignore
 # ------------------------------------------------------------------------------
 
+# --- Environment Variables ---
+
+*.tfvars
+!example.tfvars
+
+# --- Terraform ---
+
+.terraform/
+
 # --- Operating System ---
 
 # MacOS
