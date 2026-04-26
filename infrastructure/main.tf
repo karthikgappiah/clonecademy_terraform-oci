@@ -6,7 +6,7 @@
 
 terraform {
   required_version = "~> 1.14.0" # Allows 1.14.X versions only.
-  
+
   required_providers {
     oci = {
       source  = "oracle/oci"
@@ -34,4 +34,26 @@ provider "oci" {
   user_ocid        = var.user_ocid
   private_key_path = var.private_key_path
   fingerprint      = var.fingerprint
+}
+
+# --- Remote State ---
+
+data "oci_objectstorage_namespace" "ns" {
+  compartment_id = var.tenancy_ocid
+}
+
+resource "oci_identity_compartment" "free_compartment" {
+  compartment_id = var.tenancy_ocid
+  name           = "free_compartment"
+  description    = "A compartment for resources in the Always Free Tier."
+
+  enable_delete = true
+}
+
+resource "oci_objectstorage_bucket" "tfstate_bucket" {
+  compartment_id = oci_identity_compartment.free_compartment.id
+  name           = "tfstate_bucket"
+
+  namespace  = data.oci_objectstorage_namespace.ns.namespace
+  versioning = "Enabled"
 }
