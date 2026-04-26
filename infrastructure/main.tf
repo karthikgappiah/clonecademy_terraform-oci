@@ -14,8 +14,10 @@ terraform {
     }
   }
 
-  backend "local" {
-    path = "terraform.tfstate" # Located at ~/infrastructure/terraform.tfstate 
+  backend "oci" {
+    bucket    = "tfstate_bucket"
+    namespace = "ax99ng5pq6oc"           # Must be hardcoded.
+    key       = "free/terraform.tfstate" # Located at tfstate_bucket/free/terraform.tfstate
   }
 }
 
