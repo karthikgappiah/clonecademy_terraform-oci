@@ -1,0 +1,43 @@
+name: 'Terraform'
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    # These environment variables are stored as GitHub Secrets.
+    env:
+      TF_VAR_user_ocid: ${{ secrets.OCI_USER_OCID }}
+      TF_VAR_tenancy_ocid: ${{ secrets.OCI_TENANCY_OCID }}
+      TF_VAR_fingerprint: ${{ secrets.OCI_FINGERPRINT }}
+      TF_VAR_region: ${{ secrets.OCI_REGION }}
+      TF_VAR_private_key_path: /home/runner/work/_temp/oci_api_key.pem
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v6 # TODO: Update to latest version.
+
+    - name: Write Private Key
+      run: |
+        echo "${{ secrets.OCI_PRIVATE_KEY }}" > /home/runner/work/_temp/oci_api_key.pem
+        chmod 600 /home/runner/work/_temp/oci_api_key.pem
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v4 # TODO: Update to latest version.
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Format
+      run: terraform fmt -check
+
+    - name: Terraform Plan
+      run: terraform plan -input=false
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terraform apply -auto-approve -input=false
