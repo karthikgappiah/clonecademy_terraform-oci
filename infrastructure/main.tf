@@ -13,18 +13,14 @@ terraform {
       version = "~> 8.5.0" # Allows 8.5.X versions only.
     }
   }
+
+  backend "local" {
+    path = "terraform.tfstate" # Located at ~/infrastructure/terraform.tfstate 
+  }
 }
 
 # --- Providers ---
 
 provider "oci" {
   config_file_profile = "clonecademy"
-}
-
-# --- Hello World ---
-
-data "oci_identity_regions" "all_regions" {}
-
-output "all_regions" {
-  value = data.oci_identity_regions.all_regions.regions
 }
