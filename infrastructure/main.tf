@@ -36,11 +36,7 @@ provider "oci" {
   fingerprint      = var.fingerprint
 }
 
-# --- Remote State ---
-
-data "oci_objectstorage_namespace" "ns" {
-  compartment_id = var.tenancy_ocid
-}
+# --- Compartment ---
 
 resource "oci_identity_compartment" "free_compartment" {
   compartment_id = var.tenancy_ocid
@@ -48,6 +44,12 @@ resource "oci_identity_compartment" "free_compartment" {
   description    = "A compartment for resources in the Always Free Tier."
 
   enable_delete = true
+}
+
+# --- Remote State ---
+
+data "oci_objectstorage_namespace" "ns" {
+  compartment_id = var.tenancy_ocid
 }
 
 resource "oci_objectstorage_bucket" "tfstate_bucket" {
