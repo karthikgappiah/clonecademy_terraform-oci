@@ -48,16 +48,17 @@ resource "oci_identity_compartment" "free_compartment" {
   enable_delete = true
 }
 
-# --- Remote State ---
+# --- Terraform State Bucket ---
 
 data "oci_objectstorage_namespace" "ns" {
   compartment_id = var.tenancy_ocid
 }
 
 resource "oci_objectstorage_bucket" "tfstate_bucket" {
+  namespace      = data.oci_objectstorage_namespace.ns.namespace
   compartment_id = oci_identity_compartment.free_compartment.id
   name           = "tfstate_bucket"
 
-  namespace  = data.oci_objectstorage_namespace.ns.namespace
-  versioning = "Enabled"
+  object_events_enabled = true
+  versioning            = "Enabled"
 }
