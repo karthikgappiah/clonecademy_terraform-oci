@@ -15,7 +15,6 @@ terraform {
   }
 
   backend "oci" {
-    config_file_profile = "clonecademy"
     bucket              = "tfstate_bucket"
     namespace           = "ax99ng5pq6oc"           # Must be hardcoded.
     key                 = "free/terraform.tfstate" # Located at tfstate_bucket/free/terraform.tfstate
